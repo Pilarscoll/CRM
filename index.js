@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas
-
+app.get('/ping', (req, res) => res.json({ message: 'pong' }));
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/productos", productosRoutes);
 app.use('/api/ventas', ventasRoutes);
