@@ -16,12 +16,24 @@ const Usuario = {
   },
 
   // Crear un nuevo usuario
+  createDemo: async ({ nombre, email, password, telefono, rol_id }) => {
+    const salt = await bcrypt.genSalt(10);
+    const password_hash = await bcrypt.hash(password, salt);
+
+    const [result] = await db.query(
+      'INSERT INTO usuarios_crm (nombre, email, password_hash, telefono, rol_id) VALUES (?, ?, ?, ?, 4)',
+      [nombre, email, password_hash, telefono, rol_id]
+    );
+    return { id: result.insertId, nombre, email, telefono, rol_id };
+  },
+
+    // Crear un nuevo usuario
   create: async ({ nombre, email, password, telefono, rol_id }) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
     const [result] = await db.query(
-      'INSERT INTO usuarios_crm (nombre, email, password_hash, telefono, rol_id) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO usuarios_crm (nombre, email, password_hash, telefono, rol_id) VALUES (?, ?, ?, ?, 4)',
       [nombre, email, password_hash, telefono, rol_id]
     );
     return { id: result.insertId, nombre, email, telefono, rol_id };

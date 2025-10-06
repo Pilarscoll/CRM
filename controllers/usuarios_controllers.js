@@ -29,12 +29,22 @@ const usuarioController = {
   create: async (req, res) => {
     try {
       const { nombre, email, password, telefono, rol_id } = req.body;
+      const usuario = await Usuario.createDemo({ nombre, email, password, telefono, rol_id });
+      res.status(201).json(usuario);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+    createAdm: async (req, res) => {
+    try {
+      const { nombre, email, password, telefono, rol_id } = req.body;
       const usuario = await Usuario.create({ nombre, email, password, telefono, rol_id });
       res.status(201).json(usuario);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
+
 
   // Actualizar un usuario
   update: async (req, res) => {
