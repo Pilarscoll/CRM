@@ -14,5 +14,6 @@ app.use(express.json());
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/productos", productosRoutes);
 app.use('/api/ventas', ventasRoutes);
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8080; // usa el puerto de Railway si existe
+
 app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
