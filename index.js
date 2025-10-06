@@ -14,6 +14,13 @@ app.get('/ping', (req, res) => res.json({ message: 'pong' }));
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/productos", productosRoutes);
 app.use('/api/ventas', ventasRoutes);
-const PORT = process.env.PORT || 8080; // usa el puerto de Railway si existe
+const PORT = process.env.PORT;
+if (!PORT) {
+  console.error('No se encontró process.env.PORT');
+  process.exit(1); // detiene la app si no hay puerto
+}
+
+app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+// usa el puerto de Railway si existe
 
 app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
