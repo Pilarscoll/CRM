@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors");
+
 const usuarioRoutes = require("./routes/usuarios_routes")
 const productosRoutes = require("./routes/productos_routes")
 const ventasRoutes= require("./routes/ventas_routes")
