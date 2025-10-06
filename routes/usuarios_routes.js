@@ -3,7 +3,7 @@ const router = express.Router();
 const usuarioController = require('../controllers/usuarios_controllers');
 const authMiddleware = require('../middleware/auth'); // opcional, para proteger rutas
 const requireMiddleware = require('../middleware/requireAdmin'); // opcional, para proteger rutas
-import cors from "cors";
+const cors = require("cors")
 
 app.use(cors({
   origin: "http://localhost:5173", // tu frontend local
