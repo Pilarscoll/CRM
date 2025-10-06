@@ -4,11 +4,17 @@ const usuarioRoutes = require("./routes/usuarios_routes")
 const productosRoutes = require("./routes/productos_routes")
 const ventasRoutes= require("./routes/ventas_routes")
 require("dotenv").config();
+const cors = require("cors")
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(cors({
+  origin: "*", // tu frontend local
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // si usás cookies o headers de auth
+}));
 // Rutas
 app.get('/ping', (req, res) => res.json({ message: 'pong' }));
 app.use("/api/usuarios", usuarioRoutes);

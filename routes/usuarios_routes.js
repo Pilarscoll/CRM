@@ -3,13 +3,7 @@ const router = express.Router();
 const usuarioController = require('../controllers/usuarios_controllers');
 const authMiddleware = require('../middleware/auth'); // opcional, para proteger rutas
 const requireMiddleware = require('../middleware/requireAdmin'); // opcional, para proteger rutas
-const cors = require("cors")
 
-app.use(cors({
-  origin: "*", // tu frontend local
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // si usás cookies o headers de auth
-}));
 // Rutas públicas
 router.post('/login', usuarioController.login); // login sin token
 router.post('/', usuarioController.create);    // crear usuario (podés protegerla si solo admin puede crear)
