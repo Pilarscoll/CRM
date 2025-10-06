@@ -6,7 +6,7 @@ const requireMiddleware = require('../middleware/requireAdmin'); // opcional, pa
 const cors = require("cors")
 
 app.use(cors({
-  origin: "http://localhost:5173", // tu frontend local
+  origin: "*", // tu frontend local
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true, // si usás cookies o headers de auth
 }));
