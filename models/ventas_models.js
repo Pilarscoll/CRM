@@ -31,53 +31,55 @@ const Venta = {
   },
 
   // Crear una venta con detalle
-  create: async ({ usuario_id, productos }) => {
-    // productos = [{ producto_id, cantidad }]
-    let total = 0;
+  create: async ({ usuario_id, producto_id, cantidad }) => {
+  const connection = await db.getConnection();
 
-    // Comenzar transacción
-    const connection = await db.getConnection();
-    try {
-      await connection.beginTransaction();
+  try {
+    await connection.beginTransaction();
 
-      // Calcular total
-      for (const item of productos) {
-        const [rows] = await connection.query('SELECT precio, stock FROM producto WHERE id = ?', [item.producto_id]);
-        if (rows.length === 0) throw new Error(`Producto ID ${item.producto_id} no encontrado`);
-        if (rows[0].stock < item.cantidad) throw new Error(`Stock insuficiente para ${rows[0].nombre}`);
-        total += rows[0].precio * item.cantidad;
-      }
+    // Obtener información del producto
+    const [rows] = await connection.query(
+      'SELECT precio, stock FROM producto WHERE id = ?',
+      [producto_id]
+    );
+    if (rows.length === 0) throw new Error('Producto no encontrado');
+    const { precio, stock } = rows[0];
 
-      // Insertar venta
-      const [ventaResult] = await connection.query(
-        'INSERT INTO venta (usuario_id, total, estado) VALUES (?, ?, ?)',
-        [usuario_id, total, 'confirmada']
-      );
-      const venta_id = ventaResult.insertId;
+    if (stock < cantidad) throw new Error('Stock insuficiente');
 
-      // Insertar detalle y actualizar stock
-      for (const item of productos) {
-        const [rows] = await connection.query('SELECT precio, stock FROM producto WHERE id = ?', [item.producto_id]);
-        await connection.query(
-          'INSERT INTO detalle_venta (venta_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)',
-          [venta_id, item.producto_id, item.cantidad, rows[0].precio]
-        );
-        await connection.query(
-          'UPDATE producto SET stock = stock - ? WHERE id = ?',
-          [item.cantidad, item.producto_id]
-        );
-      }
+    const total = precio * cantidad;
 
-      await connection.commit();
-      return await Venta.getById(venta_id);
+    // Crear la venta
+    const [ventaResult] = await connection.query(
+      'INSERT INTO venta (usuario_id, total, estado) VALUES (?, ?, ?)',
+      [usuario_id, total, 'confirmada']
+    );
+    const venta_id = ventaResult.insertId;
 
-    } catch (error) {
-      await connection.rollback();
-      throw error;
-    } finally {
-      connection.release();
-    }
-  },
+    // Insertar el detalle de la venta
+    await connection.query(
+      'INSERT INTO detalle_venta (venta_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)',
+      [venta_id, producto_id, cantidad, precio]
+    );
+
+    // Actualizar stock
+    await connection.query(
+      'UPDATE producto SET stock = stock - ? WHERE id = ?',
+      [cantidad, producto_id]
+    );
+
+    await connection.commit();
+
+    // Devolver la venta recién creada
+    return await Venta.getById(venta_id);
+
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+},
 
   // Actualizar estado de venta
   updateEstado: async (id, estado) => {

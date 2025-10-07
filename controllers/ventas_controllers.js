@@ -26,7 +26,7 @@ const ventaController = {
 
 create: async (req, res) => {
   try {
-    const { usuario_id, productos, total, estado } = req.body;
+    const { usuario_id, producto, total, estado } = req.body;
 
     // Validar campos
     if (!usuario_id) return res.status(400).json({ error: 'Falta usuario_id' });
@@ -40,12 +40,6 @@ create: async (req, res) => {
     // Insertar productos asociados (si tenés tabla intermedia)
     // Ejemplo: productos_venta (venta_id, producto_id, cantidad)
    
-      await ProductosVenta.create({
-        venta_id: venta.id,
-        producto_id: productos.id,
-        cantidad: p.cantidad || 1
-     
-    })
 
     res.status(201).json({ mensaje: 'Venta creada con éxito', venta });
   } catch (error) {
