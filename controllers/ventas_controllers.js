@@ -26,24 +26,23 @@ const ventaController = {
 
 create: async (req, res) => {
   try {
-    const { usuario_id, producto, total, estado } = req.body;
+    const { usuario_id, producto_id, cantidad } = req.body;
 
-    // Validar campos
+    // Validaciones
     if (!usuario_id) return res.status(400).json({ error: 'Falta usuario_id' });
-    if (!total) return res.status(400).json({ error: 'Falta el total de la venta' });
-    if (!estado) return res.status(400).json({ error: 'Falta el estado de la venta' });
+    if (!producto_id) return res.status(400).json({ error: 'Falta producto_id' });
+    if (!cantidad || cantidad <= 0) return res.status(400).json({ error: 'Cantidad inválida' });
 
-    // Crear la venta
-    const fecha = new Date(); // fecha actual
-    const venta = await Venta.create({ usuario_id, fecha, total, estado });
+    // Crear la venta usando el método del modelo
+    const venta = await Venta.create({ usuario_id, producto_id, cantidad });
 
-    // Insertar productos asociados (si tenés tabla intermedia)
-    // Ejemplo: productos_venta (venta_id, producto_id, cantidad)
-   
+    res.status(201).json({
+      mensaje: 'Venta creada con éxito',
+      venta,
+    });
 
-    res.status(201).json({ mensaje: 'Venta creada con éxito', venta });
   } catch (error) {
-    console.error(error);
+    console.error('Error al crear venta:', error);
     res.status(400).json({ error: error.message });
   }
 },
