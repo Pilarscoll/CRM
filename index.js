@@ -9,10 +9,11 @@ const cors = require("cors")
 const app = express();
 
 app.use(express.json());
-
 app.use(cors({
-  origin: "crm.scollopilar.com", // tu frontend local
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"] // si usás cookies o headers de auth
+  origin: "https://crm.scollopilar.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 // Rutas
 
