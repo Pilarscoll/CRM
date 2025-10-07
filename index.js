@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "*", // tu frontend local
+  origin: "crm.scollopilar.com", // tu frontend local
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"] // si usás cookies o headers de auth
 }));
 // Rutas

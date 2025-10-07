@@ -9,7 +9,7 @@ router.post('/', usuarioController.create);    // crear usuario (podés proteger
 
 // Rutas protegidas (necesitan token JWT)
 router.get('/', authMiddleware, usuarioController.getAll);
-router.post('/',authMiddleware, usuarioController.createAdm);    // crear usuario (podés protegerla si solo admin puede crear)
+router.post('/adm',authMiddleware, usuarioController.createAdm);    // crear usuario (podés protegerla si solo admin puede crear)
 
 router.get('/:id', authMiddleware, usuarioController.getById);
 router.put('/:id', authMiddleware, usuarioController.update);
