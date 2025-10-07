@@ -24,18 +24,37 @@ const ventaController = {
     }
   },
 
-  // Crear nueva venta
-  create: async (req, res) => {
-    try {
-      const { usuario_id, productos } = req.body;
-      if (!productos || productos.length === 0) return res.status(400).json({ error: 'No se proporcionaron productos' });
+create: async (req, res) => {
+  try {
+    const { usuario_id, productos, total, estado } = req.body;
 
-      const venta = await Venta.create({ usuario_id, productos });
-      res.status(201).json(venta);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+    // Validar campos
+    if (!usuario_id) return res.status(400).json({ error: 'Falta usuario_id' });
+    if (!productos || productos.length === 0) return res.status(400).json({ error: 'No se proporcionaron productos' });
+    if (!total) return res.status(400).json({ error: 'Falta el total de la venta' });
+    if (!estado) return res.status(400).json({ error: 'Falta el estado de la venta' });
+
+    // Crear la venta
+    const fecha = new Date(); // fecha actual
+    const venta = await Venta.create({ usuario_id, fecha, total, estado });
+
+    // Insertar productos asociados (si tenés tabla intermedia)
+    // Ejemplo: productos_venta (venta_id, producto_id, cantidad)
+    for (const p of productos) {
+      await ProductosVenta.create({
+        venta_id: venta.id,
+        producto_id: p.id,
+        cantidad: p.cantidad || 1
+      });
     }
-  },
+
+    res.status(201).json({ mensaje: 'Venta creada con éxito', venta });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: error.message });
+  }
+},
+
 
   // Actualizar estado de venta
   updateEstado: async (req, res) => {
