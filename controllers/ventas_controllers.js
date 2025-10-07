@@ -30,7 +30,6 @@ create: async (req, res) => {
 
     // Validar campos
     if (!usuario_id) return res.status(400).json({ error: 'Falta usuario_id' });
-    if (!productos || productos.length === 0) return res.status(400).json({ error: 'No se proporcionaron productos' });
     if (!total) return res.status(400).json({ error: 'Falta el total de la venta' });
     if (!estado) return res.status(400).json({ error: 'Falta el estado de la venta' });
 
@@ -43,7 +42,7 @@ create: async (req, res) => {
    
       await ProductosVenta.create({
         venta_id: venta.id,
-        producto_id: productos[1].id,
+        producto_id: productos.id,
         cantidad: p.cantidad || 1
      
     })
