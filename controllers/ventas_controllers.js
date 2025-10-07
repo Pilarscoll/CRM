@@ -40,13 +40,13 @@ create: async (req, res) => {
 
     // Insertar productos asociados (si tenés tabla intermedia)
     // Ejemplo: productos_venta (venta_id, producto_id, cantidad)
-    for (const p of productos) {
+   
       await ProductosVenta.create({
         venta_id: venta.id,
-        producto_id: p.id,
+        producto_id: productos[1].id,
         cantidad: p.cantidad || 1
-      });
-    }
+     
+    })
 
     res.status(201).json({ mensaje: 'Venta creada con éxito', venta });
   } catch (error) {
